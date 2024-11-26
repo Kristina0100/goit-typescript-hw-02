@@ -1,31 +1,37 @@
 import { useState, useEffect } from 'react';
-import { fetchImagesWithQuery } from './utils/unsplash-api';
+import { fetchImagesWithQuery } from '../../utils/unsplash-api';
+import { ApiImage, ApiResponse } from '../../utils/unsplash-api.types';
 import Modal from 'react-modal';
 
-import SearchBar from './components/SearchBar/SearchBar';
-import ImageGallery from './components/ImageGallery/ImageGallery';
-import ImageModal from './components/ImageModal/ImageModal';
-import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
-import ErrorMessage from './components/ErrorMessage/ErrorMessage';
-import Loader from './components/Loader/Loader';
+import SearchBar from '../SearchBar/SearchBar';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import ImageModal from '../ImageModal/ImageModal';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import Loader from '../Loader/Loader';
 
 Modal.setAppElement('#root'); 
 
 function App() {
 
-  const [images, setImages] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [images, setImages] = useState<ApiImage[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState<number>(1);
+  const [query, setQuery] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState
+    <{ regular: string;
+    alt: string;
+    likes: number;
+    name: string;
+  } | null>(null);
 
 
-    const onSubmit = (query) => {
+    const onSubmit = (query: string) => {
       setQuery(query);
       setPage(1);
       setImages([]); 
@@ -33,15 +39,16 @@ function App() {
 
   useEffect(() => {
     if (!query) return;
+
     const fetchImagesByQuery = async () => {
       try {
         setLoading(true);
-        const data = await fetchImagesWithQuery(query, page); 
+        const data: ApiResponse = await fetchImagesWithQuery(query, page); 
         setImages((prevImages) =>
-          page === 1 ? data.results : [...prevImages, ...data.results]
+          page === 1 ? data.results : [...(prevImages || []), ...data.results]
         );
         setTotalPages(data.total_pages);
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message);
     } finally {
       setLoading(false);
@@ -56,10 +63,10 @@ const loadMore = () => {
   }
   };
   
-  const openModal = (image) => {
+  const openModal = (image: ApiImage) => {
     setSelectedImage({
     regular: image.urls.regular, 
-    alt: image.alt_description, 
+    alt: image.alt_description || 'Without description', 
     likes: image.likes, 
     name: image.user.name, 
   });
@@ -75,7 +82,7 @@ const loadMore = () => {
     <>
       <SearchBar onSubmit={onSubmit} />
       {images !== null && <ImageGallery images={images}
-      setImages={setImages} onImageClick={openModal}/>}
+     onImageClick={openModal}/>}
       {loading && <Loader />}
       {error && <ErrorMessage error={error}/>}
       {images !== null && images.length > 0 && page < totalPages && (
@@ -90,7 +97,7 @@ const loadMore = () => {
       )}
     </>
   )
-}
+};
 
 export default App;
 
