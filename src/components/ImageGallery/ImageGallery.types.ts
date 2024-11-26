@@ -1,6 +1,6 @@
-import { UnsplashImage } from '../../utils/unsplash-api';
+import { ApiImage } from '../../utils/unsplash-api.types';
 
 export type Props = {
-    images: UnsplashImage[];
-    onImageClick: (image: UnsplashImage) => void;
+    images: ApiImage[];
+    onImageClick: (image: ApiImage) => void;
 };

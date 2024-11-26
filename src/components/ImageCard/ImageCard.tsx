@@ -5,7 +5,7 @@ const ImageCard = ({ urls, alt_description, onClick }: Props) => {
     <div>
       <div>
         <img src={urls.small || ''}
-          alt={alt_description}
+          alt={alt_description || 'Without description'}
           onClick={onClick}/>
       </div>
     </div>

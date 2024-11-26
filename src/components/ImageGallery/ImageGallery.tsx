@@ -10,7 +10,7 @@ const ImageGallery = ({ images, onImageClick }: Props) => {
 					<li key={image.id}>
 						<ImageCard
 							urls={image.urls}
-							alt_description={image.alt_description}
+							alt_description={image.alt_description || 'Without description'}
 							onClick={() => onImageClick(image)}/>
 					</li>
 				))}
