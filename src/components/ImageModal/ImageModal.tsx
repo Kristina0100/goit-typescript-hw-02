@@ -26,10 +26,10 @@ const ImageModal = ({selectedImage, isOpen, onRequestClose}: Props) => {
         onRequestClose={onRequestClose}
       >
         <div>
-          <img src={selectedImage.regular} alt={selectedImage.alt} onClick={onRequestClose} />
+          <img src={selectedImage.urls.regular} alt={selectedImage.alt_description || 'Without description'} onClick={onRequestClose} />
           <div className={styles.wrapper}>
           <p className={styles.info}>Likes: {selectedImage.likes}</p>
-          <p className={styles.info}>Author: {selectedImage.name}</p>
+          <p className={styles.info}>Author: {selectedImage.user.name}</p>
         </div>
         </div>
       </Modal>

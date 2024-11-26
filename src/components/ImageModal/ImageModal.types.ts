@@ -1,10 +1,7 @@
+import { ApiImage } from "../../utils/unsplash-api.types";
+
 export type Props = {
-    selectedImage: {
-        regular: string;
-        likes: number;
-        alt: string;
-        name: string;
-    };
+    selectedImage: ApiImage;
     isOpen: boolean;
     onRequestClose:() => void;
 };

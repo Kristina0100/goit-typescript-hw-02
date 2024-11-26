@@ -3,5 +3,6 @@ export type Props = {
     small: string;
   };
     alt_description: string | null;
-    onClick: () => void;
+    onClick: React.MouseEventHandler<HTMLImageElement>;
 };
+

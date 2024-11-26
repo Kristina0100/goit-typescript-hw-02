@@ -23,13 +23,7 @@ function App() {
   const [totalPages, setTotalPages] = useState<number>(0);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState
-    <{ regular: string;
-    alt: string;
-    likes: number;
-    name: string;
-  } | null>(null);
-
+  const [selectedImage, setSelectedImage] = useState<ApiImage | null>(null);
 
     const onSubmit = (query: string) => {
       setQuery(query);
@@ -48,12 +42,16 @@ function App() {
           page === 1 ? data.results : [...(prevImages || []), ...data.results]
         );
         setTotalPages(data.total_pages);
-    } catch (error: any) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-    };
+      } catch (error: unknown) {
+          if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Unknown error');
+          }
+        } finally {
+          setLoading(false);
+        }
+      };
     fetchImagesByQuery ();
   }, [query, page]);
 
@@ -63,15 +61,12 @@ const loadMore = () => {
   }
   };
   
-  const openModal = (image: ApiImage) => {
-    setSelectedImage({
-    regular: image.urls.regular, 
-    alt: image.alt_description || 'Without description', 
-    likes: image.likes, 
-    name: image.user.name, 
-  });
+const openModal = (image: ApiImage) => {
+  if (!isModalOpen) { 
+    setSelectedImage(image);
     setIsModalOpen(true);
-  };
+  }
+};
 
   const closeModal = () => {
     setIsModalOpen(false);
